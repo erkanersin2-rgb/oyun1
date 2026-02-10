@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilişim Dünyası | Donanım Avcısı Oyunu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #game-viewport {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: #0f172a;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 2px solid #1e293b;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.4), 0 0 20px rgba(99, 102, 241, 0.2);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 10px;
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            z-index: 20;
+        }
+
+        .bubble:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 30;
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent),
+                        radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.15), transparent);
+        }
+
+        .category-tag {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body class="hero-gradient min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="border-b border-white/10 py-4 px-6 mb-8 bg-slate-950/50 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 21h6l-.75-4M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <span class="text-xl font-extrabold tracking-tight text-indigo-400">Bilişim<span class="text-white">Dersi</span></span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-slate-400">
+                <a href="#about" class="hover:text-white transition-colors">Donanım Nedir?</a>
+                <a href="#play" class="hover:text-white transition-colors">Oyun Oyna</a>
+                <a href="#tutorial" class="hover:text-white transition-colors">Nasıl Oynanır?</a>
+            </div>
+            <a href="#play" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-full text-sm font-bold transition-all transform hover:scale-105">
+                Şimdi Başla
+            </a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6">
+        
+        <!-- Hero Section -->
+        <header class="text-center mb-16 pt-10">
+            <h1 class="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">
+                Donanım Parçalarını Keşfet
+            </h1>
+            <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+                Bilişim teknolojileri dersi donanım birimlerini eğlenerek öğrenmek için harika bir yol. Baloncukları patlat, puanları topla!
+            </p>
+        </header>
+
+        <!-- About Section -->
+        <section id="about" class="grid md:grid-cols-4 gap-4 mb-20">
+            <div class="glass-card p-6 rounded-2xl border-l-4 border-l-blue-500">
+                <h3 class="font-bold text-blue-400 mb-2">Giriş Birimleri</h3>
+                <p class="text-xs text-slate-400">Bilgisayara veri girişi sağlayan parçalar (Fare, Klavye vb.)</p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl border-l-4 border-l-red-500">
+                <h3 class="font-bold text-red-400 mb-2">Çıkış Birimleri</h3>
+                <p class="text-xs text-slate-400">Verilerin işlenmiş halini gösteren parçalar (Ekran, Yazıcı vb.)</p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500">
+                <h3 class="font-bold text-emerald-400 mb-2">Depolama</h3>
+                <p class="text-xs text-slate-400">Verilerin kalıcı olarak saklandığı parçalar (SSD, USB vb.)</p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl border-l-4 border-l-amber-500">
+                <h3 class="font-bold text-amber-400 mb-2">İç Donanım</h3>
+                <p class="text-xs text-slate-400">Kasa içerisinde yer alan temel parçalar (Anakart, RAM vb.)</p>
+            </div>
+        </section>
+
+        <!-- Game Section -->
+        <section id="play" class="mb-24">
+            <div id="game-viewport" class="shadow-2xl shadow-indigo-500/10">
+                <!-- UI Elements -->
+                <div class="absolute top-6 left-6 z-40 flex gap-4">
+                    <div class="glass-card px-4 py-2 rounded-xl">
+                        <div class="text-[10px] uppercase tracking-wider text-slate-400">Skor</div>
+                        <div id="score" class="text-2xl font-bold text-yellow-400">0</div>
+                    </div>
+                    <div class="glass-card px-4 py-2 rounded-xl">
+                        <div class="text-[10px] uppercase tracking-wider text-slate-400">Süre</div>
+                        <div id="timer" class="text-2xl font-bold text-rose-400">60</div>
+                    </div>
+                </div>
+
+                <div class="absolute top-6 right-6 z-40">
+                    <div class="bg-indigo-600/90 backdrop-blur-md px-6 py-3 rounded-2xl border border-indigo-400/30 text-right">
+                        <div class="text-[10px] uppercase tracking-wider text-white/70">Sıradaki Hedef</div>
+                        <div id="target-category" class="text-xl font-black text-white italic">BEKLEYİN...</div>
+                    </div>
+                </div>
+
+                <!-- Overlays -->
+                <div id="overlay" class="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/90 p-6">
+                    <div class="max-w-md w-full text-center">
+                        <div id="overlay-icon" class="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h2 id="overlay-title" class="text-4xl font-black mb-4">HAZIR MISIN?</h2>
+                        <p id="overlay-desc" class="text-slate-400 mb-8 leading-relaxed">
+                            Donanım parçalarını kategorilerine göre avlamaya başla! Yanlış tıklamalar puan kaybettirir.
+                        </p>
+                        <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-2xl transition-all shadow-xl shadow-indigo-500/25">
+                            BAŞLAT
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="game-area" class="w-full h-full"></div>
+            </div>
+        </section>
+
+        <!-- Tutorial Section -->
+        <section id="tutorial" class="mb-20 glass-card rounded-3xl p-10">
+            <h2 class="text-3xl font-black mb-8 text-center">Nasıl Oynanır?</h2>
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">1</div>
+                    <h4 class="font-bold mb-2 text-white">Hedefe Bak</h4>
+                    <p class="text-sm text-slate-400 italic">"Sıradaki Hedef" kutusunda yazan kategoriyi takip et.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">2</div>
+                    <h4 class="font-bold mb-2 text-white">Hızlı Patlat</h4>
+                    <p class="text-sm text-slate-400 italic">Yukarıdan düşen baloncuklardan hedefe uyanları kaçırmadan patlat.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">3</div>
+                    <h4 class="font-bold mb-2 text-white">Yüksek Skor</h4>
+                    <p class="text-sm text-slate-400 italic">60 saniye içinde en yüksek puanı toplayıp sınıfın şampiyonu ol!</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-white/10 py-10 text-center text-slate-500 text-sm">
+        <p>&copy; 2026 Bilişim Teknolojileri Donanım Eğitim Portalı. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <script>
+        const hardwareData = [
+            { name: "Fare", cat: "Giriş Birimi", color: "#3b82f6" },
+            { name: "Klavye", cat: "Giriş Birimi", color: "#3b82f6" },
+            { name: "Tarayıcı", cat: "Giriş Birimi", color: "#3b82f6" },
+            { name: "Mikrofon", cat: "Giriş Birimi", color: "#3b82f6" },
+            { name: "Webcam", cat: "Giriş Birimi", color: "#3b82f6" },
+            { name: "Ekran", cat: "Çıkış Birimi", color: "#ef4444" },
+            { name: "Yazıcı", cat: "Çıkış Birimi", color: "#ef4444" },
+            { name: "Hoparlör", cat: "Çıkış Birimi", color: "#ef4444" },
+            { name: "Kulaklık", cat: "Çıkış Birimi", color: "#ef4444" },
+            { name: "SSD", cat: "Depolama", color: "#10b981" },
+            { name: "USB Bellek", cat: "Depolama", color: "#10b981" },
+            { name: "Sabit Disk", cat: "Depolama", color: "#10b981" },
+            { name: "İşlemci", cat: "İç Donanım", color: "#f59e0b" },
+            { name: "RAM", cat: "İç Donanım", color: "#f59e0b" },
+            { name: "Anakart", cat: "İç Donanım", color: "#f59e0b" },
+            { name: "Ekran Kartı", cat: "İç Donanım", color: "#f59e0b" }
+        ];
+
+        const categories = ["Giriş Birimi", "Çıkış Birimi", "Depolama", "İç Donanım"];
+        
+        let score = 0;
+        let timeLeft = 60;
+        let gameActive = false;
+        let currentTargetCat = "";
+        let spawnInterval;
+        let timerInterval;
+
+        const gameArea = document.getElementById('game-area');
+        const viewport = document.getElementById('game-viewport');
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const targetEl = document.getElementById('target-category');
+        const overlay = document.getElementById('overlay');
+        const startBtn = document.getElementById('start-btn');
+        const overlayTitle = document.getElementById('overlay-title');
+        const overlayDesc = document.getElementById('overlay-desc');
+
+        function initGame() {
+            score = 0;
+            timeLeft = 60;
+            gameActive = true;
+            scoreEl.innerText = score;
+            timerEl.innerText = timeLeft;
+            overlay.classList.add('hidden');
+            gameArea.innerHTML = "";
+            
+            changeTargetCategory();
+            
+            spawnInterval = setInterval(spawnBubble, 1100);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function changeTargetCategory() {
+            currentTargetCat = categories[Math.floor(Math.random() * categories.length)];
+            targetEl.innerText = currentTargetCat.toUpperCase();
+            
+            // Subtle transition effect
+            targetEl.parentElement.animate([
+                { transform: 'scale(1)', opacity: 0.5 },
+                { transform: 'scale(1.05)', opacity: 1 },
+                { transform: 'scale(1)', opacity: 1 }
+            ], { duration: 300 });
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            timerEl.innerText = timeLeft;
+            if (timeLeft <= 0) endGame();
+            if (timeLeft % 12 === 0 && timeLeft !== 60) changeTargetCategory();
+        }
+
+        function spawnBubble() {
+            if (!gameActive) return;
+
+            const data = hardwareData[Math.floor(Math.random() * hardwareData.length)];
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.innerText = data.name;
+            
+            const size = 90 + Math.random() * 30;
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.backgroundColor = data.color + "cc";
+            
+            const startX = Math.random() * (viewport.offsetWidth - size);
+            bubble.style.left = `${startX}px`;
+            bubble.style.top = `-${size}px`;
+            
+            gameArea.appendChild(bubble);
+
+            const duration = 5000 + Math.random() * 2000;
+            const animation = bubble.animate([
+                { top: `-${size}px` },
+                { top: `${viewport.offsetHeight}px` }
+            ], {
+                duration: duration,
+                easing: 'linear'
+            });
+
+            animation.onfinish = () => bubble.remove();
+
+            bubble.addEventListener('click', (e) => {
+                if (!gameActive) return;
+                handleCapture(data, bubble, e);
+            });
+        }
+
+        function handleCapture(item, element, event) {
+            const rect = viewport.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            createParticles(x, y, item.color);
+            
+            if (item.cat === currentTargetCat) {
+                score += 10;
+                scoreEl.innerText = score;
+                element.style.transform = 'scale(0) rotate(180deg)';
+            } else {
+                score = Math.max(0, score - 5);
+                scoreEl.innerText = score;
+                element.style.filter = 'grayscale(1) contrast(0.5)';
+                element.style.opacity = '0';
+            }
+
+            setTimeout(() => element.remove(), 200);
+        }
+
+        function createParticles(x, y, color) {
+            for (let i = 0; i < 10; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.width = '6px';
+                p.style.height = '6px';
+                p.style.backgroundColor = color;
+                p.style.left = x + 'px';
+                p.style.top = y + 'px';
+                gameArea.appendChild(p);
+
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 60 + Math.random() * 40;
+                
+                p.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 600,
+                    easing: 'ease-out'
+                }).onfinish = () => p.remove();
+            }
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(spawnInterval);
+            clearInterval(timerInterval);
+            
+            document.querySelectorAll('.bubble').forEach(b => b.remove());
+            
+            overlayTitle.innerText = "OYUN BİTTİ!";
+            overlayDesc.innerHTML = `Mükemmel bir iş çıkardın!<br><span class="text-white text-5xl block my-4 font-black">${score} Puan</span>`;
+            startBtn.innerText = "YENİDEN DENE";
+            overlay.classList.remove('hidden');
+        }
+
+        startBtn.addEventListener('click', initGame);
+    </script>
+</body>
+</html>
